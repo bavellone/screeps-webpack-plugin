@@ -59,8 +59,10 @@ class ScreepsWebpackPlugin {
         const {branch} = this.options
 
         compilation.applyPlugins(BEFORE_COMMIT, branch, modules)
-        modules.main = modules['main.js']
-        delete module['main.js']
+        if (!modules.main && modules['main.js']) {
+          modules.main = modules['main.js']
+          delete modules['main.js']
+        }
         return client.commit(branch, modules)
           .then((body) => {
             compilation.applyPlugins(AFTER_COMMIT, body)
